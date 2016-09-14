@@ -1,0 +1,18 @@
+{% extends "layout/default.html" %}
+{% block content %}
+{% for user in users.items %}
+  <div class="media">
+    <div class="media-body">
+        <h4>{{ user.username }} <small>注册于 {{ user.registered_on.strftime("%Y-%m-%d %H:%M:%S") }}</small></h4>
+      <p>
+        <a href="#" class="btn btn-small btn-default">详情</a>
+        <a href="#" class="btn btn-small btn-default">置顶</a>
+        <a href="#" class="btn btn-small btn-default">发布</a>
+        <a href="#" class="btn btn-small btn-default">下线</a>
+        <a href="#" class="btn btn-small btn-default">删除</a>
+      </p>
+      <hr style="margin-bottom:0;"/> 
+    </div> 
+  </div> 
+{% endfor %}
+{% endblock %}

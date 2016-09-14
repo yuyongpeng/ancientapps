@@ -1,0 +1,36 @@
+{% extends "layout/default.html" %}
+{% block content %}
+<section id="apps">
+  <header>
+    <ul class="pager">
+      <li>{% if betas.has_prev %}<a href="{{url_for('manager', page=betas.prev_num)}}">上一页</a>{% else %}<a style="color: #AAA;">上一页</a>{% endif %}</li>
+      <li>{% if betas.has_next %}<a href="{{url_for('manager', page=betas.next_num)}}">下一页</a>{% else %}<a style="color: #AAA;">下一页</a>{% endif %}</li>
+    </ul>
+  </header>
+  {% if betas.total == 0 %}
+  <p class='bg-warning' style="padding:15px;text-align:center;">哈哈！</p>
+  {% else %}
+  {% for beta in betas.items %}
+  <div class="media">
+    <div class="media-body">
+        <h4>{{ beta.name }} <small>版本 {{ beta.version }} ({{ beta.build }}) 上传于 {{ beta.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</small></h4>
+      <p>
+        <a href="{{url_for('single_beta', id=beta.id)}}" class="btn btn-primary btn-xs">详情</a>
+        <a href="#" class="btn btn-default btn-xs">置顶</a>
+        <a href="{{url_for('publish', id=beta.id)}}" class="btn btn-default btn-xs {% if beta.stable %} disabled {% endif %}">发布</a>
+        <a href="{{url_for('revoke', id=beta.id)}}" class="btn btn-default btn-xs {% if beta.stable == False %} disabled {% endif %}">下线</a>
+        <a href="{{url_for('delete', id=beta.id)}}" class="pull-right btn btn-danger btn-xs {% if beta.is_deleted == True %} disabled {% endif %}">删除</a>
+      </p>
+      <hr style="margin-bottom:0;"/> 
+    </div> 
+  </div> 
+  {% endfor %}
+  {% endif %}
+  <footer>
+    <ul class="pager">
+      <li>{% if betas.has_prev %}<a href="{{url_for('manager', page=betas.prev_num)}}">上一页</a>{% else %}<a style="color: #AAA;">上一页</a>{% endif %}</li>
+      <li>{% if betas.has_next %}<a href="{{url_for('manager', page=betas.next_num)}}">下一页</a>{% else %}<a style="color: #AAA;">下一页</a>{% endif %}</li>
+    </ul>
+  </footer>
+</section>
+{% endblock %}

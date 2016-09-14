@@ -1,0 +1,14 @@
+{% extends "layout/default.html" %}
+{% block content %}
+<article>
+    <h1>说明</h1>
+    <h3>如何上传测试版</h3>
+    <p>有两种方法可以上传打包好的 ipa 文件。</p>
+    <ol>
+        <li>可以到<a href="{{ url_for('upload') }}">这里</a>通过表单上传</li>
+        <li>也可以通过命令行方式上传，只要将 .ipa 文件以 <code>form-data</code> 的方式 <code>POST</code> 到相同的地址即可。<br />
+            命令行上传示例（使用 <code>curl</code>）：<br />
+            <code>curl -F "ipa=@文件名" http://inhouse-test.bbwc.cn/upload</code></li>
+    </ol>
+</article>
+{% endblock %}

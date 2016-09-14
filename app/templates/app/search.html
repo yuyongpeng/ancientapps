@@ -1,0 +1,16 @@
+{% extends "layout/app-list.html" %}
+{% block pager %}
+  <ul class="pagination">
+    <li {% if not betas.has_prev %} class="disabled" {% endif %}>
+    <a {% if betas.has_prev %} href="{{ url_for('search_app', page=betas.prev_num, name=name) }}" {% endif %}>&laquo;</a>
+  </li>
+  {% for i in range( page - 2, page + 3 ) %}
+    {% if i in range(1, betas.pages + 1) %}
+      <li {% if i == page %}class="active"{% endif %} ><a href="{{ url_for('search_app', page=i, name=name) }}">{{i}}</a></li>
+    {% endif %}
+  {% endfor %}
+  <li {% if not betas.has_next %} class="disabled" {% endif %}>
+  <a {% if betas.has_next %} href="{{ url_for('search_app', page=betas.next_num, name=name) }}" {% endif %}>&raquo;</a>
+</li>
+</ul>
+{% endblock %}

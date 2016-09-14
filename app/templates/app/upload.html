@@ -1,0 +1,115 @@
+{% extends "layout/default.html" %}
+{% block content %}
+<style type="text/css">
+input#ipa {width: 100%; height: 150px; opacity: 0;}
+div#fileUploaderCover {border: 5px dashed #AAAAAA; width: 100%; height: 150px; border-radius: 10px;}
+</style>
+<h1>把 IPA 拖到框里，自动开始上传</h1>
+<hr />
+<form enctype="multipart/form-data" method="post" action="">
+  <div class="form-group" id="fileUploaderCover">
+    <input type="file" multiple id="ipa" onchange="fileSelected();" />
+  </div>
+  <div id="progressContainer" class="progress progress-striped active">
+    <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 0%;">
+    </div>
+  </div>
+</form>
+<table id="resultTable" class="table" style="display:none;">
+  <tr>
+    <th>应用名称</th>
+    <td id="appName"></td>
+  </tr>
+  <tr>
+    <th>团队</th>
+    <td id="appTeam"></td>
+  </tr>
+  <tr>
+    <th>版本</th>
+    <td id="appVersion"></td>
+  </tr>
+  <tr>
+    <th>BundleID</th>
+    <td id="appID"></td>
+  </tr>
+  <tr>
+    <th>下载链接</th>
+    <td id="appLink"></td>
+  </tr>
+  <tr>
+    <th>二维码</th>
+    <td><img class="thumbnail" style= "max-width: 200px;" id="appQRCode" src=""></td>
+  </tr>
+</table>
+<script type="text/javascript">
+function fileSelected () {
+  var file = document.getElementById('ipa').files[0];
+  var cover = document.getElementById('fileUploaderCover');
+  if (file) {
+    var fileSize = 0;
+    if (file.size > 1024 * 1024) {
+        fileSize = Math.round(file.size / ( 1024 * 1024 ) * 100 ) / 100;
+        fileSize = fileSize.toString() + 'MB';
+    } else {
+        fileSize = Math.round(file.size / 1024 * 100 ) / 100;
+        fileSize = fileSize.toString() + 'KB';
+    }
+    var h2 = document.createElement('h2');
+    h2.style.marginTop = '-100px';
+    h2.style.textAlign = 'center';
+    h2.style.color = '#999999';
+    h2.innerHTML = file.name.toString() + ' (' + fileSize + ')';
+    cover.appendChild(h2);
+    uploadFile();
+  };
+}
+function uploadFile () {
+  var fd = new FormData();
+  var file = document.getElementById('ipa').files[0];
+  if (!file) {
+    console.log('No file has been selected. ');
+    return null;
+  } else {
+    fd.append('ipa[]', document.getElementById('ipa').files[0]);
+    var xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener('progress', uploadProgress, false);
+    xhr.addEventListener('load', uploadComplete, false);
+    xhr.addEventListener('error', uploadFailed, false);
+    xhr.addEventListener('abort', uploadCanceled, false);
+    xhr.open('POST', 'upload', true);
+    xhr.send(fd);
+  }
+}
+function uploadProgress(evt) {
+  if (evt.lengthComputable) {
+    var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+    document.getElementById('progress-bar').style.width = percentComplete.toString() + "%";
+  } else {
+    document.getElementById('progressNumber').innerHTML = 'Unable to compute';
+  }
+}
+function uploadComplete (evt) {
+  document.getElementById('progressContainer').className = 'progress';
+  var uploadResults = JSON.parse(evt.target.responseText);
+  if (uploadResults.code == '0') {
+    document.getElementById('progress-bar').innerHTML = '上传成功！';
+    document.getElementById('progress-bar').className = 'progress-bar progress-bar-success';
+    document.getElementById('resultTable').style.display = 'block';
+    document.getElementById('appName').innerHTML = uploadResults.apps[0].name;
+    document.getElementById('appTeam').innerHTML = uploadResults.apps[0].team;
+    document.getElementById('appVersion').innerHTML = uploadResults.apps[0].version.toString() + '(' + uploadResults.apps[0].build.toString() + ')';
+    document.getElementById('appID').innerHTML = uploadResults.apps[0].bundle_id;
+    document.getElementById('appLink').innerHTML = uploadResults.apps[0].link;
+    document.getElementById('appQRCode').src = "{{g.host}}/download/" + uploadResults.apps[0].qrcode;
+  } else {
+    document.getElementById('progress-bar').className = 'progress-bar progress-bar-danger';
+  }
+}
+function uploadFailed (evt) {
+  console.log('An error occured when trying to upload the file.');
+}
+function uploadCanceled (evt) {
+  console.log('Upload was canceled by the user.')
+}
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "layout/default.html" %}
+{% block content %}
+    <h3><img class="icon" src="{{ g.host }}/download/{{ beta.icon }}">{{ beta.name }}</h3>
+    <div id="download">
+        <a id="downloadButton" href="{{ beta.link }}" class="btn btn-success btn-lg center-block hidden-lg">立刻安装</a>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-8">
+        <table class="table">
+            <tr> <th>版本</th> <td>{{beta.version}} ({{beta.build}})</td> </tr>
+            <tr> <th>上传时间</th> <td>{{beta.timestamp.strftime("%Y-%m-%d %H:%M:%S")}}</td> </tr>
+            <tr> <th>备注</th> <td>{{beta.notes}}</td> </tr>
+            <tr>
+                <th>状态</th>
+                <td>{% if beta.stable == True %}稳定测试版{% endif %}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-6 col-md-4 hidden-xs">
+        <img class="img-thumbnail" style="max-width: 220px;" src="{{ g.host }}/download/{{ beta.qrcode }}">
+    </div>
+    <script type="text/javascript">
+    var ts=new Date().getTime();
+    var btn = document.getElementById('downloadButton');
+    var ua = navigator.userAgent.toLowerCase();
+    btn.href += '&ts=' + ts.toString();
+    if (/iphone|ipad/.test(ua)) {
+        window.location = btn.href
+        if (/micromessenger/.test(ua)) {
+            flash = document.createElement('div');
+            flash.className = 'alert alert-warning';
+            flashedMessage = document.createElement('p');
+            flashedMessage.innerHTML = '如果下载没有自动开始，请点击右上角按钮，选择「用 Safari 打开」。';
+            flash.appendChild(flashedMessage);
+            var container = document.getElementsByClassName('container')[0];
+            container.insertBefore(flash, container.children[0]);
+        };
+    };
+    </script>
+{% endblock %}

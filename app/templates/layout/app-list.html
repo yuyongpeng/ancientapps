@@ -1,0 +1,59 @@
+{% extends "layout/default.html" %}
+{% block content %}
+  <section id="apps">
+    <header>
+      {% block pager %}{% endblock %}
+</header>
+{% if betas.total == 0 %}
+  <p class='bg-warning' style="padding:15px;text-align:center;">现在还没有 app 可以下载。</p>
+{% else %}
+  {% for beta in betas.items %}
+    <div class="media" id="beta-{{beta.id}}">
+      <a class="pull-left media-object" href="{{ beta.link }}">
+        <img class="icon" src="{{ g.host }}/download/{{ beta.icon }}"/>
+      </a>
+      <div class="media-body">
+        <h4>
+        <a href="{{ beta.link }}">{{ beta.name }}</a>
+        </h4>
+        <p class="text-muted">
+        <a href="{{ beta.link }}">
+          {{ beta.version }} ({{ beta.build }})<br />
+          {{ beta.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}
+        </a>
+        </p>
+        {% if beta.qrcode %}
+        <div class="hidden-xs hidden-sm">
+          <button type="button" class="btn btn-default btn-small" onclick=showQR("{{beta.qrcode}}")>
+          <span class="glyphicon glyphicon-qrcode"></span> 扫描二维码
+          </button>
+          <a href="{{ url_for('single_beta', id=beta.id) }}" class="btn btn-default">
+            <span class="glyphicon glyphicon-info-sign"></span> 详细信息
+          </a>
+        </div>
+        {% endif %}
+        <hr style="margin-bottom:0;"/>
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
+<footer>
+  {{self.pager()}}
+</footer>
+</section>
+{% endblock %}
+{% block footer %}
+{{super()}}
+<script type="text/javascript">
+function showQR(arg) {
+var qr = document.getElementById('qrImg')
+var qd = document.getElementById('qrCode')
+qr.src='{{ g.host }}/download/' + arg
+qd.className="show"
+}
+function hideQR () {
+var qd = document.getElementById('qrCode')
+qd.className="hidden"
+}
+</script>
+{% endblock %}

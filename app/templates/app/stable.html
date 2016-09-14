@@ -1,0 +1,47 @@
+{% extends "layout/default.html" %}
+
+{% block content %}
+
+<section id="apps">
+
+  <header>
+    {% block pager %}
+    <ul class="pager">
+      <li>{% if betas.has_prev %}<a href="{{url_for('public_beta', team=team, page=betas.prev_num)}}">上一页</a>{% else %}<a style="color: #AAA;">上一页</a>{% endif %}</li>
+      <li>{% if betas.has_next %}<a href="{{url_for('public_beta', team=team, page=betas.next_num)}}">下一页</a>{% else %}<a style="color: #AAA;">下一页</a>{% endif %}</li>
+    </ul>
+    {% endblock pager %}
+  </header>
+
+  {% if betas.total == 0 %}
+  <p class='bg-warning' style="padding:15px;text-align:center;">现在还没有 app 可以下载。</p>
+  {% else %}
+  {% for beta in betas.items %}
+  <div class="media">
+    <a class="pull-left media-object" href="{{ beta.link }}">
+      <img class="icon" src="/download/{{ beta.bundle_id }}/{{ beta.build }}/{{ beta.icon }}"/>
+    </a>
+    <div class="media-body">
+      <a class="text-primary" href="{{ beta.link }}"> 
+        <h4>{{ beta.name }}</h4>
+      </a> 
+      <h5 class="text-muted">{{ beta.team }}</h5> 
+      <p class="text-muted"> 
+        <a class="text-muted" href="{{ beta.link }}"> 
+          {{ beta.version }} ({{ beta.build }})<br /> 
+          {{ beta.timestamp.strftime("%Y-%m-%d %H:%M:%S") }} 
+        </a> 
+      </p> 
+      <hr style="margin-bottom:0;"/> 
+    </div> 
+  </div> 
+  {% endfor %}
+  {% endif %}
+
+  <footer>
+    {{ self.pager() }}
+  </footer>
+
+</section>
+
+{% endblock %}

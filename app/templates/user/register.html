@@ -1,0 +1,20 @@
+{% extends "layout/default.html" %}
+{% block content %}
+  <div class="login-form center-block">
+    <form role="form" action="" method=post>
+      <div class="form-group">
+        <label for="inputUsername">用户名</label>
+        <input type="text" name="username" class="form-control" id="inputUsername" placeholder="英文字母或数字">
+      </div>
+      <div class="form-group">
+        <label for="inputEmail">Email 地址</label>
+        <input type="email" name="email" class="form-control" id="inputEmail" placeholder="请输入电邮地址">
+      </div>
+      <div class="form-group">
+        <label for="inputPassword">密码</label>
+        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="请输入密码">
+      </div>
+      <button type="submit" class="form-control btn btn-success">注册</button>
+    </form>
+  </div>
+{% endblock %}

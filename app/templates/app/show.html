@@ -1,0 +1,7 @@
+{% extends "layout/app-list.html" %}
+    {% block pager %}
+    <ul class="pager">
+      <li>{% if betas.has_prev %}<a href="{{url_for('show_app', bundle_id=bundle_id, page=betas.prev_num)}}">上一页</a>{% else %}<a style="color: #AAA;">上一页</a>{% endif %}</li>
+      <li>{% if betas.has_next %}<a href="{{url_for('show_app', bundle_id=bundle_id, page=betas.next_num)}}">下一页</a>{% else %}<a style="color: #AAA;">下一页</a>{% endif %}</li>
+    </ul>
+    {% endblock pager %}
